@@ -23,13 +23,13 @@ namespace NinjaTrader.Strategy
     {
         #region Variables
         // Wizard generated variables
-        private double dropSize = 8.00; // Default setting for DropSize
-        private int dropTime = 25; // Default setting for DropTime
+        private double dropSize = 6.00; // Default setting for DropSize
+        private int dropTime = 14; // Default setting for DropTime
         private int unitsToBuy = 1; // Default setting for UnitsToBuy
-        private double target = 0.009; // Default setting for Target
-        private double stop = 0.006; // Default setting for Stop
+        private double target = 0.01; // Default setting for Target
+        private double stop = 0.005; // Default setting for Stop
 		private int barsToWait = 5; // Number of bars to wait after drop
-		private int mfiLength = 14; // MFI parameter
+		private int mfiLength = 18; // MFI parameter
         // User defined variables (add any user defined variables below)
 		int alreadyTradedToday = 0;
         #endregion
