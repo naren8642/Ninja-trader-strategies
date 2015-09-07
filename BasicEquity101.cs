@@ -19,15 +19,17 @@ namespace NinjaTrader.Strategy
     /// Buy after big drop
     /// </summary>
     [Description("Buy after big drop")]
-    public class TF2AfterBigDrop : Strategy
+    public class BuyAfterBigDrop : Strategy
     {
         #region Variables
         // Wizard generated variables
-        private double dropSize = 2.00; // Default setting for DropSize
+        private double dropSize = 8.00; // Default setting for DropSize
         private int dropTime = 25; // Default setting for DropTime
-        private int unitsToBuy = 500; // Default setting for UnitsToBuy
-        private double target = 0.06; // Default setting for Target
-        private double stop = 0.04; // Default setting for Stop
+        private int unitsToBuy = 1; // Default setting for UnitsToBuy
+        private double target = 0.009; // Default setting for Target
+        private double stop = 0.006; // Default setting for Stop
+		private int barsToWait = 5; // Number of bars to wait after drop
+		private int mfiLength = 14; // MFI parameter
         // User defined variables (add any user defined variables below)
 		int alreadyTradedToday = 0;
         #endregion
@@ -53,7 +55,10 @@ namespace NinjaTrader.Strategy
 			{   alreadyTradedToday = 0; }
 			
             // Condition set 1
-            if ((Low[5] < High[dropTime+5] - dropSize) && (GetCurrentAsk() > Low[5]) && alreadyTradedToday < 1)
+            if ((Low[BarsToWait] < High[dropTime+BarsToWait] - dropSize) 
+				&& (GetCurrentAsk() > Low[BarsToWait]) 
+				&& alreadyTradedToday < 1 
+				&& (MFI(MFILength)[0] > 40 || CrossAbove(MFI(MFILength), 20, BarsToWait)))
             {
 				alreadyTradedToday += 1;
                 EnterLong(UnitsToBuy, "");
@@ -83,6 +88,22 @@ namespace NinjaTrader.Strategy
         {
             get { return unitsToBuy; }
             set { unitsToBuy = Math.Max(1, value); }
+        }
+
+        [Description("Bars to wait before buy")]
+        [GridCategory("Parameters")]
+        public int BarsToWait
+        {
+            get { return barsToWait; }
+            set { barsToWait = Math.Max(1, value); }
+        }
+
+        [Description("MFI Param")]
+        [GridCategory("Parameters")]
+        public int MFILength
+        {
+            get { return mfiLength; }
+            set { mfiLength = Math.Max(1, value); }
         }
 
         [Description("Profit target percent")]
