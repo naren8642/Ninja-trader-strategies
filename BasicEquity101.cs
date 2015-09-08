@@ -32,6 +32,7 @@ namespace NinjaTrader.Strategy
 		private int mfiLength = 18; // MFI parameter
         // User defined variables (add any user defined variables below)
 		int alreadyTradedToday = 0;
+		private IOrder entryOrder = null;
         #endregion
 
         /// <summary>
@@ -61,9 +62,16 @@ namespace NinjaTrader.Strategy
 				&& (MFI(MFILength)[0] > 40 || CrossAbove(MFI(MFILength), 20, BarsToWait)))
             {
 				alreadyTradedToday += 1;
-                EnterLong(UnitsToBuy, "");
+                entryOrder = EnterLong(UnitsToBuy, "");
             }
         }
+
+		protected override void OnExecution(IExecution execution)
+		{
+			if (entryOrder != null && entryOrder == execution.Order)
+				SendMail("naren.salem+auto@gmail.com", "naren.salem@gmail.com", "BuyOnBigDrop", execution.ToString());
+		}
+
 
         #region Properties
         [Description("Drop before buy")]
